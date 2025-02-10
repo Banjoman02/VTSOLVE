@@ -15,3 +15,9 @@ M_EARTH:float = 5.9722e24 # TODO: Cite this
 
 M_SUN: float = 1.988416e30 # TODO: Cite this
 """``float``: Mass of the Sun in kilograms."""
+
+MU_EARTH: float = G * M_EARTH
+"""``float``: Gravity param for earth orbit."""
+
+MU_SUN: float = G * M_SUN
+"""``float``: Gravity param for the sun."""
