@@ -8,7 +8,7 @@ Description: Solves Kepler's equation.
 # Python Standard Imports
 from math import * # LOL WILDCARD IMPORT HAHAHAHAH FUCK YOU PYTHON
 
-ATOL:float = 1e-8
+ATOL:float = 1e-7
 """``float``: Absolute tolerance."""
 MAX_ITER:int = 10000
 """``int``: Maximum iterations."""
