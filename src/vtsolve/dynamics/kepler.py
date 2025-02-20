@@ -1,68 +1,78 @@
+#!/usr/bin/pythonw
 """kepler.py
 
 Author: Monty Campbell
-Created: 2/9/25
-Description: Solves Kepler's equation.
-"""
+Created: 2/7/2025
+Description: Simple script for solving Kepler's equaution."""
+# Standard Library Imports
+from math import *
+import sys
 
-# Python Standard Imports
-from math import * # LOL WILDCARD IMPORT HAHAHAHAH FUCK YOU PYTHON
-
-ATOL:float = 1e-8
-"""``float``: Absolute tolerance."""
 MAX_ITER:int = 10000
-"""``int``: Maximum iterations."""
+"""``int``: Maximum allowed number of iterations."""
+ATOL:float = 1e-7
+"""``float``: Tolerance."""
 
-class UnboundOrbitError(Exception):
-    """Represents an exception for an unbound orbit."""
-    pass
-
-def _verifyBoundEcc(ecc: float) -> None:
-    """Verifies that the eccentricity is for a bound orbit.
-
-    Args:
-        ecc (float): Eccentricity
-    """
-    if ecc < 0 or ecc >= 1:
-        raise UnboundOrbitError(f"Orbit is not bound: ecc = {ecc}")
-
-def _estErr(guess: float,
-            ecc: float,
-            ) -> float:
-    """Estimates the error using Newton Raphson method.
+def calcError(Ecc_Anom: float,
+              ecc: float,
+              M: float,
+              ) -> float:
+    """Calculates the error for a given guess.
 
     Args:
-        guess (float): Guess for the eccentric anomaly.
-        ecc (float): Eccentricity estimate.
+        Ecc_Anom (float): Guess for eccentric anomaly
+        ecc (float): Eccentricity.
+        M (float): Mean Anomaly.
 
     Returns:
-        float: Estimated error.
+        float: Epsilon.
     """
-    # Calculate M as a function of E
-    mean_anom: float = guess - ecc * sin(guess)
-    # Calculate DM/DE
-    d_mean_anom: float = 1 - ecc * cos(guess)
-    return -1 * mean_anom / d_mean_anom
+    # Calculate f(x_n), or in this case M(E_n)
+    mean_anom:float = Ecc_Anom - ecc * sin(Ecc_Anom) - M
+    # Calculate f'(x_n), or in this case M'(E_n)
+    d_mean_anom:float = 1 - ecc * cos(Ecc_Anom)
+    # Calculate epsilon_n
+    err = -1 * mean_anom / d_mean_anom
+    return err
 
-def solveKepler(init_guess: float,
+def solveKepler(init_guess:float,
                 ecc: float,
                 ) -> float:
-    """Solves Kepler's Equation numerically.
+    """Numerically solves Kepler's Equation.
 
     Args:
-        init_guess (float): Initial guess for E. Typically M.
-        ecc (float): Known eccentricity.
+        init_guess (float): Initial guess for E. This is typically the Mean Anomaly, M.
+        ecc (float): Orbit eccentricity.
 
     Returns:
-        float: Numerically approximated solution for E.
+        float: Best guess estimate for E.
     """
-    _verifyBoundEcc(ecc) # TODO: Verify if this actually fucking needs to be here.
-    guess = init_guess + 0
-    num_iter:int = 0
-    while abs(init_guess - guess + ecc * sin(guess)) >= ATOL:
-        num_iter += 1
-        err_n: float = _estErr(guess, ecc)
-        guess += err_n
-        if num_iter >= MAX_ITER:
-            break
-    return guess
+    E_n = init_guess
+    for _i in range(MAX_ITER):
+        E_last = E_n + 0
+        E_n += calcError(E_n, ecc, init_guess)
+        if abs(E_last - E_n) <= ATOL:
+            print(f"Converged after {_i} iterations")
+            return E_n
+    raise RuntimeError(f"Failed to converge after {MAX_ITER} steps!")
+
+def main() -> None:
+    """What do you think this does lol."""
+    args:list = sys.argv # When you write your own cli instead of using argparse...
+    arg_format:str = "\nArgs must be as follows:\n python3 kepler.py [Mean Anomaly] [eccentricity]"
+    if len(args) == 0: # The user gave us NOTHING
+        # Tell them what a silly goose they are and make them give us things.
+        print(f"No args given!\n{arg_format}")
+        sys.exit(1)
+    M = float(sys.argv[1])
+    ecc = float(sys.argv[2])
+    print("Solving for the Eccentric Anomaly.")
+    try:
+        E = solveKepler(M, ecc)
+    except RecursionError:
+        print(f"HAHAHAHAHAH LOL IT BROKE")
+    print(f"Solved E = {E} rad = {degrees(E)} degrees!")
+    sys.exit(0)
+
+if __name__=='__main__':
+    main()
