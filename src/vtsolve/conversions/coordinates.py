@@ -14,6 +14,9 @@ import numpy as np
 # Local Imports
 from ..constants import ECLIPTIC_INCLINATION
 
+class SolarCenteredCoordinates:
+    """Represents solar coordinates in the eclipltic frame, with x-hat pointing to J2000"""
+
 class EclipticEarthCenteredCoordinates:
     """Represents cartesian coordinates in the ecliptic frame, but relative to the Earth's COM."""
 
