@@ -10,7 +10,6 @@ from math import *
 import numpy as np
 
 # Local Imports
-#from ..constants import MU_SUN
 
 def intertial_cartesian_to_coe(
         x:float,
