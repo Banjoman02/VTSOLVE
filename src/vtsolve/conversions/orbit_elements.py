@@ -59,12 +59,12 @@ def intertial_cartesian_to_coe(
     e:float = np.linalg.norm(ecc_vec) # Eccentricity as a scalar parameter
     i = acos(np.dot(k_hat, h) / np.linalg.norm(h)) # Inclination
     # RAAN
-    raan:float = acos(np.dot(i_hat, h) / np.linalg.norm(h))
-    if np.dot(j_hat, h) < 0: # Quadrant check for y-component of h
-        raan = 2 * pi - raan
+    raan:float = atan2(n_hat[1], n_hat[0])
     # argp
     argp:float = acos(np.dot(ecc_vec, n_hat) / e)
     if np.dot(ecc_vec, k_hat) < 0: # Quadrant check for z-component of the eccentricity vector.
+        if debug:
+            print("Quadrant check handled for argp.")
         argp = 2 * pi - argp
     # True Anomaly
     true_anom:float = acos(np.dot(ecc_vec, r) / (e * np.linalg.norm(r))) # No quadrant check needed here
@@ -73,7 +73,7 @@ def intertial_cartesian_to_coe(
 def main() -> None:
     """User interface for the calculations. Should not be used in the rest of the codebase."""
     r:list[float] = eval(input("Enter the position as a list with units in DU: "))
-    v:list[float] = eval(input("Enter the velocity vector as a list with units of DU/TU:" ))
+    v:list[float] = eval(input("Enter the velocity vector as a list with units of DU/TU: "))
     mu:float = eval(input("Enter your gravity parameter in units if DU^3 / TU^2: "))
     coe = intertial_cartesian_to_coe(
         r[0],
