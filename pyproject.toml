@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vtsolve"
+version = "0.0.1"
+description = "Virginia Tech Space Object Location and Velocity Estimator (VT-SOLVE)"
+dynamic = ["readme"]
+dependencies = [
+    "numpy>=1.19",
+    "opencv-python==4.10.0.84",
+    "argparse",
+    "ressolve",
+]
+requires-python = ">=3.9"
+
+[project.scripts]
+img_analyze = "vtsolve:get_asteroid_pos"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+readme = { file = "README.md" }
+
+[tool.setuptools.packages.find]
+where = ["src"]

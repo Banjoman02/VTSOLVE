@@ -1,1 +1,1 @@
-from . import conversions, constants, platesolve, dynamics
+from . import conversions, constants, pipeline, dynamics
