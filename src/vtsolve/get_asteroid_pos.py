@@ -33,15 +33,19 @@ def getCLI() -> ArgumentParser:
     )
 
     parser.add_argument(
-        "ra",
-        "RA",
+        "-ra",
+        "--right-ascension",
+        dest="ra",
+        metavar="RA",
         type=float,
         help="Predicted right ascension, in degrees."
     )
 
     parser.add_argument(
-        "dec",
-        "DEC",
+        "-dec",
+        "--declination",
+        dest="dec",
+        metavar="DEC",
         type=float,
         help="Predicted declination, in degrees",
     )
@@ -51,7 +55,7 @@ def getCLI() -> ArgumentParser:
         "--mirrored",
         dest="mirrored",
         metavar="MIRRORED",
-        default=True,
+        default=False,
         type=bool,
         help="Optional flag if the image is mirrored. Will flip the image array before attempting to plate-solve."
     )
