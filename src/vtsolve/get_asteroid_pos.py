@@ -12,8 +12,10 @@ import math
 # Third Party Imports
 from ressolve.platesolve.solution import PlateSolution
 from ressolve.platesolve.astrometry_solver import AstrometrySolver
-from ressolve.image import Image, loadFITS
+from ressolve.image import Image, loadCommon
 from argparse import ArgumentParser
+import cv2
+import numpy as np
 
 # Local Imports
 
@@ -34,23 +36,23 @@ def getCLI() -> ArgumentParser:
     )
 
     parser.add_argument(
-        "-ra",
-        "--right-ascension",
-        dest="ra",
-        metavar="RA",
+        "-x",
+        "--x-coordinate",
+        dest="x",
+        metavar="X",
         type=float,
         default=None,
-        help="Predicted right ascension, in degrees."
+        help="Asteroid Position X-Coordinate"
     )
 
     parser.add_argument(
-        "-dec",
-        "--declination",
-        dest="dec",
-        metavar="DEC",
+        "-y",
+        "--y-coordinate",
+        dest="y",
+        metavar="Y",
         type=float,
         default=None,
-        help="Predicted declination, in degrees",
+        help="Asteroid Position Y-Coordinate",
     )
 
     parser.add_argument(
@@ -64,6 +66,27 @@ def getCLI() -> ArgumentParser:
     )
 
     return parser
+
+def drawCircle(image:Image,
+               x:int,
+               y:int,
+               radius=50,
+               color=255,
+               thickness=2) -> None:
+    """_summary_
+
+    Args:
+        image (Image): _description_
+        x (int): _description_
+        y (int): _description_
+        radius (int, optional): _description_. Defaults to 50.
+        color (int, optional): _description_. Defaults to 255.
+        thickness (int, optional): _description_. Defaults to 2.
+    """
+    image_with_circle = image.img_arr.copy()
+    center = (int(x), int(y))
+    cv2.circle(image_with_circle, center, radius, color, thickness)
+    image.img_arr = image_with_circle
 
 def angular_distance(ra1_deg, dec1_deg, ra2_deg, dec2_deg):
     """
@@ -101,12 +124,12 @@ def main() -> None:
 
     # Pull required information from CLI
     img_path:str = args.target_file
-    ra:float | None = args.ra
-    dec:float | None = args.dec
     mirrored:bool = args.mirrored
+    x:float | None = args.x
+    y:float | None = args.y
 
     # Open the image
-    _img_arr = loadFITS(img_path)
+    _img_arr = loadCommon(img_path)
     image = Image.fromImageArray(_img_arr)
     if mirrored:
         image.flipHorizontal()
@@ -117,13 +140,13 @@ def main() -> None:
     solution:PlateSolution = solver.solveField()
 
     # Print some stuff for the solved RA/DEC
-    print("Imaged Solved!\n")
+    print(f"Imaged Solved = {solution.solved}\n")
     print(f"Center RA = {solution.center_ra}. Center DEC = {solution.center_dec}")
     print(f"Image is rotated {solution.center_rotation} degrees E of N.")
 
-    if ra is not None and dec is not None:
-        dist = angular_distance(ra, dec, solution.center_ra, solution.center_dec)
-        print(f"Image Center is {dist} degrees away from center coordinates!")
+    if x is not None and y is not None:
+        coords = solver.getPixelPosition(x, y)
+        print(f"Solved coords at (x, y) = {coords}")
 
 if __name__=='__main__':
     main()

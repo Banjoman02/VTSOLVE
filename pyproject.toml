@@ -9,6 +9,7 @@ description = "Virginia Tech Space Object Location and Velocity Estimator (VT-SO
 dynamic = ["readme"]
 dependencies = [
     "numpy>=1.19",
+    "opencv-python==4.10.0.84",
     "argparse",
     "ressolve",
 ]
