@@ -8,6 +8,12 @@ Description: Imports necessary input data from a json file."""
 from json import loads
 from dataclasses import dataclass
 from datetime import datetime
+from math import radians
+
+# Third Party Imports
+
+# Local Imports
+from ..conversions.coordinates import *
 
 
 @dataclass
@@ -28,6 +34,15 @@ class Measurement:
         """``datetime``: Measurement epoch represented as a datetime object."""
         return datetime.fromisoformat(self.timestamp_iso)
     
+    @property
+    def celestial_coordinates(self) -> CelestialCoordinates:
+        """``CelestialCoordinates``: Represents the meausurement as celestial coordinates."""
+        return CelestialCoordinates(ra=radians(self.ra), dec=radians(self.dec))
+    
+    @property
+    def rho_hat(self) -> EclipticEarthCenteredCoordinates:
+        """``EclipticEarthCenteredCoordinates``: Expresses the meausurement as a line-of-sight vector."""
+        return self.celestial_coordinates.toEarthCenteredEclipticUnit()
 
 def loadData(path:str) -> list[Measurement]:
     """Loads data from input json.
