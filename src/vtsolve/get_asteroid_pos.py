@@ -7,6 +7,7 @@ Description: Simple script that plate-solves an image and attempts to identify a
 reported coordinates."""
 
 # Python Standard Imports
+import math
 
 # Third Party Imports
 from ressolve.platesolve.solution import PlateSolution
@@ -38,6 +39,7 @@ def getCLI() -> ArgumentParser:
         dest="ra",
         metavar="RA",
         type=float,
+        default=None,
         help="Predicted right ascension, in degrees."
     )
 
@@ -47,6 +49,7 @@ def getCLI() -> ArgumentParser:
         dest="dec",
         metavar="DEC",
         type=float,
+        default=None,
         help="Predicted declination, in degrees",
     )
 
@@ -62,6 +65,33 @@ def getCLI() -> ArgumentParser:
 
     return parser
 
+def angular_distance(ra1_deg, dec1_deg, ra2_deg, dec2_deg):
+    """
+    Calculate the angular distance between two RA/Dec coordinates in degrees.
+    
+    Parameters:
+    - ra1_deg, dec1_deg: coordinates of the first object (degrees)
+    - ra2_deg, dec2_deg: coordinates of the second object (degrees)
+    
+    Returns:
+    - Angular distance in degrees
+    """
+    # Convert degrees to radians
+    ra1 = math.radians(ra1_deg)
+    dec1 = math.radians(dec1_deg)
+    ra2 = math.radians(ra2_deg)
+    dec2 = math.radians(dec2_deg)
+    
+    # Spherical law of cosines
+    cos_angle = math.sin(dec1) * math.sin(dec2) + math.cos(dec1) * math.cos(dec2) * math.cos(ra1 - ra2)
+    # Clamp to valid range in case of numerical errors
+    cos_angle = min(1.0, max(-1.0, cos_angle))
+    angle_rad = math.acos(cos_angle)
+    
+    # Convert radians back to degrees
+    angle_deg = math.degrees(angle_rad)
+    return angle_deg
+
 def main() -> None:
     """Entry Point"""
     parser:ArgumentParser = getCLI()
@@ -71,8 +101,8 @@ def main() -> None:
 
     # Pull required information from CLI
     img_path:str = args.target_file
-    ra:float = args.ra
-    dec:float = args.dec
+    ra:float | None = args.ra
+    dec:float | None = args.dec
     mirrored:bool = args.mirrored
 
     # Open the image
@@ -90,6 +120,10 @@ def main() -> None:
     print("Imaged Solved!\n")
     print(f"Center RA = {solution.center_ra}. Center DEC = {solution.center_dec}")
     print(f"Image is rotated {solution.center_rotation} degrees E of N.")
+
+    if ra is not None and dec is not None:
+        dist = angular_distance(ra, dec, solution.center_ra, solution.center_dec)
+        print(f"Image Center is {dist} degrees away from center coordinates!")
 
 if __name__=='__main__':
     main()
