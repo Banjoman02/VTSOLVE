@@ -15,7 +15,7 @@ dependencies = [
 requires-python = ">=3.9"
 
 [project.scripts]
-platesolve = "platesolve:get_asteroid_pos"
+img_analyze = "vtsolve:get_asteroid_pos"
 
 [tool.setuptools]
 include-package-data = true
