@@ -10,7 +10,7 @@ import numpy as np
 from datetime import datetime
 
 # Local Imports
-from ..constants import MU_SUN
+from ..constants import *
 from .kepler import solveKepler
 
 class OrbitalBodyPosition:
@@ -22,6 +22,7 @@ class OrbitalBodyPosition:
                  argp: float,
                  raan: float,
                  t0: datetime,
+                 mean_lon: float,
                  mu:float = MU_SUN,
                  ):
         """Calculates the position of an orbital body.
@@ -33,6 +34,8 @@ class OrbitalBodyPosition:
             argp (float): Argument of Periapsis.
             raan (float): Right ascension of ascending node.
             t0 (float): Intial epoch.
+            mean_lon (float): Mean Longitude.
+            mu (float, Optional): Gravitational Parameter. Defaults to MU_SUN.
         """
         self.sma:float = sma
         self.ecc:float = ecc
@@ -40,8 +43,27 @@ class OrbitalBodyPosition:
         self.argp:float = argp
         self.raan:float = raan
         self.t0:datetime = t0
+        self.mean_lon:float = mean_lon
         
         self.mu:float = mu
+
+    @classmethod
+    def earth(cls) -> "OrbitalBodyPosition":
+        """Fast method for creating an instance that has all of the Earth's orbital elements pre-loaded.
+
+        Returns:
+            OrbitalBodyPosition: Constructed Earth Orbit.
+        """
+        return cls(
+            EARTH_SMA,
+            EARTH_ECC,
+            EARTH_INC,
+            EARTH_ARGP,
+            EARTH_RAAN,
+            J2000,
+            EARTH_MEAN_LONG,
+            mu=MU_SUN,
+        )
         
     def calcNu(self, t:datetime) -> float:
         """Calculates true anomaly at a spot in time.
@@ -53,7 +75,7 @@ class OrbitalBodyPosition:
             float: True anomaly at datetime.
         """
         delta_t:float = (t - self.t0).total_seconds() # Total time difference between inital time and input time
-        mean_anom = sqrt(self.mu / (self.sma ** 3)) * delta_t # Mean anomaly
+        mean_anom = self.mean_lon + sqrt(self.mu / (self.sma ** 3)) * delta_t - self.raan - self.argp # Mean anomaly
         ecc_anom = solveKepler(mean_anom, self.ecc) # Eccentric anomaly
         return 2 * atan2(sqrt((1 + self.ecc) / (1 - self.ecc)) * tan(ecc_anom / 2)) # Calculates and returns nu
     
