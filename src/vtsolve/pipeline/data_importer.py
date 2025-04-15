@@ -14,6 +14,8 @@ from math import radians
 
 # Local Imports
 from ..conversions.coordinates import *
+from ..dynamics.observer import Observer
+from ..dynamics.propagation import OrbitalBodyPosition
 
 
 @dataclass
@@ -27,7 +29,13 @@ class Measurement:
     """``float``: Right ascension, in degrees."""
 
     dec:float
-    """``float``: Declination, in degrees"""
+    """``float``: Declination, in degrees."""
+
+    lat:float
+    """``float``: Lattitude of the observer, in degrees."""
+
+    lon:float
+    """``float``: Longitude of the observer, in degrees."""
 
     @property
     def epoch(self) -> datetime:
@@ -43,6 +51,25 @@ class Measurement:
     def rho_hat(self) -> EclipticEarthCenteredCoordinates:
         """``EclipticEarthCenteredCoordinates``: Expresses the meausurement as a line-of-sight vector."""
         return self.celestial_coordinates.toEarthCenteredEclipticUnit()
+    
+    @property
+    def observer_vector(self) -> np.ndarray:
+        """``np.ndarray``: Position from the sun pointing towards the observer's position on earth."""
+        earth_orbit = OrbitalBodyPosition.earth()
+        observer = Observer(radians(self.lat),
+                            radians(self.lon),
+                            )
+        
+        # Calculate earth's orbital position around the sun
+        nu:float = earth_orbit.calcNu(self.epoch)
+        r:float = earth_orbit.calcRad(nu)
+        earth_pos:np.ndarray = earth_orbit.calcInertialCoords(nu, r)
+
+        # Calculate observer's position wrt the earth in the solar frame.
+        obs_pos = observer.toSolarInertial(self.epoch)
+
+        # Calculate combined position and return
+        return earth_pos + obs_pos
 
 def loadData(path:str) -> list[Measurement]:
     """Loads data from input json.
@@ -55,4 +82,10 @@ def loadData(path:str) -> list[Measurement]:
     """
     with open(path, 'r') as fstream:
         data:list[dict] = loads(fstream)
-    return [Measurement(**json_obj) for json_obj in data]
+    lat = float(data['lat'])
+    lon = float(data['lon'])
+    measurement_json:list[dict] = [measurement for measurement in data['measurements']]
+    for measurement in measurement_json: # Populate JSON with observer position data.
+        measurement['lat'] = lat
+        measurement['lon'] = lon
+    return [Measurement(**measurement) for measurement in measurement_json]

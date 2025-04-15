@@ -6,7 +6,7 @@ import numpy as np
 from datetime import datetime
 
 # Local Imports
-from ..constants import R_EARTH, OMEGA_EARTH, EQUINIOX_DT, ECLIPTIC_INCLINATION
+from ..constants import R_EARTH, OMEGA_EARTH, EQUINOX_DT, ECLIPTIC_INCLINATION
 
 class Observer:
     
@@ -15,12 +15,12 @@ class Observer:
                  lon: float,
                  rad: float = R_EARTH,
                  ):
-        """_summary_
+        """Constructs an instance.
 
         Args:
-            lat (float): _description_
-            lon (float): _description_
-            rad (float, optional): _description_. Defaults to R_EARTH.
+            lat (float): Geographic latitude of the observer.
+            lon (float): Geographic longitude of the observer.
+            rad (float, optional): Equatorial radius of the Earth. Defaults to R_EARTH.
         """
         self.lat:float = lat
         self.lon:float = lon
@@ -29,17 +29,17 @@ class Observer:
         self.gamma = pi / 2 - self.lat
     
     def toECI(self, t:datetime) -> np.ndarray:
-        """_summary_
+        """Computes the relative position of the observer in the ECI frame.
 
         Returns:
-            np.ndarray: _description_
+            np.ndarray: 3D Position vector in the ECI frame of the observer.
         """
         ecef:np.ndarray =  np.array([
             self.radius * cos(self.lon) * sin(self.gamma),
             self.radius * sin(self.lon) * sin(self.gamma),
             self.radius * cos(self.gamma),
         ])
-        delta_t = (t - EQUINIOX_DT).total_seconds()
+        delta_t = (t - EQUINOX_DT).total_seconds()
         theta = (OMEGA_EARTH * delta_t) % (2 * pi)
         R_3 = np.array([
             [cos(theta), sin(theta), 0],
@@ -51,13 +51,13 @@ class Observer:
     def toSolarInertial(self,
                         t:datetime,
                         ) -> np.ndarray:
-        """_summary_
+        """Computes the coordinates in the solar inertial frame.
 
         Args:
-            t (datetime): _description_
+            t (datetime): Epoch.
 
         Returns:
-            np.ndarray: _description_
+            np.ndarray: 3D Relative position vector in the solar frame.
         """
         eci:np.ndarray = self.toECI(t)
         rot_matrix = np.array([1, 0, 0],

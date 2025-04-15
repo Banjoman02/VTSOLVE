@@ -1,4 +1,5 @@
-[
+{
+    "measurements": [
     {
         "time": "ISO Timestamp",
         "ra": 0.0,
@@ -14,4 +15,7 @@
         "ra": 0.0,
         "dec": 0.0
     }
-]
+    ],
+    "lat": 37,
+    "lon": -80
+}

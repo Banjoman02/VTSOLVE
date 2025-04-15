@@ -8,6 +8,8 @@ Description: Contains a few important constants lol."""
 from math import radians
 from datetime import datetime
 
+# ================ MISC ================
+
 ECLIPTIC_INCLINATION: float = 0.4090926 # TODO: Cite this
 """``float``: Inclination of the ecliptic wrt the Earth's equator. Measured in radians."""
 
@@ -25,6 +27,17 @@ M_SUN: float = 1.988416e30 # TODO: Cite this
 
 MU_EARTH: float = G * M_EARTH
 """``float``: Gravity param for earth orbit."""
+
+R_EARTH:float = 6378.137e3
+"""``float``: Earth equatorial radius in meters."""
+
+OMEGA_EARTH:float = 7.2921159e-5
+"""``float``: Earth sidereal rotation angular velocity in rad/sec."""
+
+EQUINOX_DT:datetime = datetime.fromisoformat('2024-03-20T03:06:20Z')
+"""``datetime``: Datetime object of the last vernal equinox."""
+
+# ================ EARTH ORBITAL PARAMS ================
 
 MU_SUN: float = G * M_SUN
 """``float``: Gravity param for the sun."""
