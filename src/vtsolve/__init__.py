@@ -6,6 +6,7 @@ Description: Package Imports and Entry point."""
 
 # Python Standard Imports
 from datetime import datetime, timedelta
+from math import degrees
 
 # Third Party Imports
 import numpy as np
@@ -15,6 +16,7 @@ from . import conversions, constants, pipeline, dynamics # NOTE: DO NOT DELETE O
 from .pipeline.data_importer import Measurement, loadData
 from .constants import MU_SUN
 from .pipeline.iod import iod
+from .dynamics.propagation import intertial_cartesian_to_coe
 
 def main(init_message_path:str) -> None:
     """Entry point.
@@ -49,3 +51,16 @@ def main(init_message_path:str) -> None:
     print(f"Position and Velocity Calculated!\npos = {pos}\nvel={vel}")
 
     # State Vector to COE Conversions
+    coe:tuple[float] = intertial_cartesian_to_coe(
+        pos[0],
+        pos[1],
+        pos[2],
+        vel[0],
+        vel[1],
+        vel[2],
+        mu=MU_SUN,
+    )
+    print("="*80)
+    print(f"Calculated Classical Orbital Elements!")
+    print(f"SMA = {coe[0]} meters           ECC = {coe[1]}                INC = {degrees(coe[2])} deg")
+    print(f"RAAN = {degrees(coe[3])} deg    ARGP = {degrees(coe[4])} deg  TANOM = {degrees(coe[5])} deg")
