@@ -22,7 +22,6 @@ class OrbitalBodyPosition:
                  argp: float,
                  raan: float,
                  t0: datetime,
-                 mean_lon: float,
                  mu:float = MU_SUN,
                  ):
         """Calculates the position of an orbital body.
@@ -43,7 +42,6 @@ class OrbitalBodyPosition:
         self.argp:float = argp
         self.raan:float = raan
         self.t0:datetime = t0
-        self.mean_lon:float = mean_lon
         
         self.mu:float = mu
 
@@ -61,7 +59,6 @@ class OrbitalBodyPosition:
             EARTH_ARGP,
             EARTH_RAAN,
             J2000,
-            EARTH_MEAN_LONG,
             mu=MU_SUN,
         )
         
@@ -75,7 +72,7 @@ class OrbitalBodyPosition:
             float: True anomaly at datetime.
         """
         delta_t:float = (t - self.t0).total_seconds() # Total time difference between inital time and input time
-        mean_anom = self.mean_lon + sqrt(self.mu / (self.sma ** 3)) * delta_t - self.raan - self.argp # Mean anomaly
+        mean_anom = sqrt(self.mu / (self.sma ** 3)) * delta_t  # Mean anomaly
         ecc_anom = solveKepler(mean_anom, self.ecc) # Eccentric anomaly
         return 2 * atan2(sqrt((1 + self.ecc) / (1 - self.ecc)) * tan(ecc_anom / 2)) # Calculates and returns nu
     
