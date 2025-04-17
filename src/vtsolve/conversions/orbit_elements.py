@@ -67,7 +67,9 @@ def intertial_cartesian_to_coe(
             print("Quadrant check handled for argp.")
         argp = 2 * pi - argp
     # True Anomaly
-    true_anom:float = acos(np.dot(ecc_vec, r) / (e * np.linalg.norm(r))) # No quadrant check needed here
+    true_anom:float = acos(np.dot(ecc_vec, r) / (e * np.linalg.norm(r)))
+    if np.dot(r, v) <= 0:
+        true_anom = 2 * pi - true_anom # Quadrant check
     return (a, e, i, raan, argp, true_anom)
 
 def main() -> None:
