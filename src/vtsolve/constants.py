@@ -57,5 +57,5 @@ EARTH_RAAN: float = radians(-11.26064)
 EARTH_ARGP: float = radians(102.94719)
 """``float``: Earth argument of periapsis."""
 
-EARTH_MEAN_LONG: float = radians(100.46435)
-"""``float``: Earth's mean longitude."""
+EARTH_TO: datetime = datetime.fromisoformat("2025-01-04T13:28:00Z")
+"""``float``: T0 for the Earth's orbit."""
