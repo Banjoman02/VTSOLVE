@@ -94,9 +94,9 @@ class CelestialCoordinates:
         Returns:
             EclipticEarthCenteredCoordinates: Coordinates, represented as Earth Centered Ecliptic.
         """
-        rot_matrix = np.array([1, 0, 0],
+        rot_matrix = np.array([[1, 0, 0],
                               [0, cos(ECLIPTIC_INCLINATION), -1 * sin(ECLIPTIC_INCLINATION)],
-                              [0, sin(ECLIPTIC_INCLINATION), cos(ECLIPTIC_INCLINATION)],
+                              [0, sin(ECLIPTIC_INCLINATION), cos(ECLIPTIC_INCLINATION)],],
                               )
         converted = np.matmul(rot_matrix, self.vector)
         return EclipticEarthCenteredCoordinates.fromVector(converted)

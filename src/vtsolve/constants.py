@@ -6,14 +6,14 @@ Description: Contains a few important constants lol."""
 
 # Python Standard Imports
 from math import radians
-from datetime import datetime
+from datetime import datetime, timezone
 
 # ================ MISC ================
 
 ECLIPTIC_INCLINATION: float = 0.4090926 # TODO: Cite this
 """``float``: Inclination of the ecliptic wrt the Earth's equator. Measured in radians."""
 
-J2000: datetime = datetime(2000, 1, 1, 0, 0, 0)
+J2000: datetime = datetime(2000, 1, 1, 0, 0, 0).replace(tzinfo=timezone.utc)
 """``float``: Formal epoch definition of J2000."""
 
 G:float = 6.67430e-11 # TODO: Cite this
@@ -34,7 +34,7 @@ R_EARTH:float = 6378.137e3
 OMEGA_EARTH:float = 7.2921159e-5
 """``float``: Earth sidereal rotation angular velocity in rad/sec."""
 
-EQUINOX_DT:datetime = datetime(2024, 3, 20, 3, 6, 20)
+EQUINOX_DT:datetime = datetime(2024, 3, 20, 3, 6, 20).replace(tzinfo=timezone.utc)
 """``datetime``: Datetime object of the last vernal equinox."""
 
 # ================ EARTH ORBITAL PARAMS ================
@@ -57,5 +57,5 @@ EARTH_RAAN: float = radians(-11.26064)
 EARTH_ARGP: float = radians(102.94719)
 """``float``: Earth argument of periapsis."""
 
-EARTH_TO: datetime = datetime(2025, 1, 4, 13, 29, 0)
+EARTH_TO: datetime = datetime(2025, 1, 4, 13, 29, 0).replace(tzinfo=timezone.utc)
 """``float``: T0 for the Earth's orbit."""

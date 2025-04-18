@@ -7,7 +7,7 @@ Created: 2/20/2025
 # Standard Library Imports
 from math import *
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Local Imports
 from ..constants import *
@@ -122,7 +122,7 @@ class OrbitalBodyPosition:
         self.inc:float = inc
         self.argp:float = argp
         self.raan:float = raan
-        self.t0:datetime = t0
+        self.t0:datetime = t0.replace(tzinfo=timezone.utc) # This makes things not break.
         
         self.mu:float = mu
 
@@ -155,7 +155,7 @@ class OrbitalBodyPosition:
         delta_t:float = (t - self.t0).total_seconds() # Total time difference between inital time and input time
         mean_anom = sqrt(self.mu / (self.sma ** 3)) * delta_t  # Mean anomaly
         ecc_anom = solveKepler(mean_anom, self.ecc) # Eccentric anomaly
-        return 2 * atan2(sqrt((1 + self.ecc) / (1 - self.ecc)) * tan(ecc_anom / 2)) # Calculates and returns nu
+        return 2 * atan2(sqrt((1 + self.ecc) / (1 - self.ecc)) * tan(ecc_anom / 2), 1) # Calculates and returns nu
     
     def calcRad(self, nu:float) -> float:
         """Calculates the orbital distance at a given true anomaly.

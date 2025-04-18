@@ -3,7 +3,7 @@
 # Python Standard Imports
 from math import *
 import numpy as np
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Local Imports
 from ..constants import R_EARTH, OMEGA_EARTH, EQUINOX_DT, ECLIPTIC_INCLINATION
@@ -39,6 +39,7 @@ class Observer:
             self.radius * sin(self.lon) * sin(self.gamma),
             self.radius * cos(self.gamma),
         ])
+        t.replace(tzinfo=timezone.utc)
         delta_t = (t - EQUINOX_DT).total_seconds()
         theta = (OMEGA_EARTH * delta_t) % (2 * pi)
         R_3 = np.array([
@@ -60,9 +61,9 @@ class Observer:
             np.ndarray: 3D Relative position vector in the solar frame.
         """
         eci:np.ndarray = self.toECI(t)
-        rot_matrix = np.array([1, 0, 0],
+        rot_matrix = np.array([[1, 0, 0],
                               [0, cos(ECLIPTIC_INCLINATION), -1 * sin(ECLIPTIC_INCLINATION)],
-                              [0, sin(ECLIPTIC_INCLINATION), cos(ECLIPTIC_INCLINATION)],
+                              [0, sin(ECLIPTIC_INCLINATION), cos(ECLIPTIC_INCLINATION)],],
                               )
         return np.matmul(rot_matrix, eci)    
         
