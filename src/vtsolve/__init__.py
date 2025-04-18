@@ -46,20 +46,28 @@ def runVTSOLVE(init_message_path:str) -> None:
         init_message_path (str): Path to JSON file containing data.
     """
     # Load all the data
+    print("="*80)
     print("Loading Measurements...")
     measurements:list[Measurement] = loadData(init_message_path)
-    print("Loaded measurements!!!")
+    print(f"Loaded measurements!!!")
+    for i,measurement in enumerate(measurements):
+        print(f"Measurement {i}: {measurement}")
 
     # Put together Observer position matrix. NOTE: These are transposed per how Michael wrote the code.
+    print("="*80)
     rog_array:np.ndarray = (np.array([measurement.observer_vector for measurement in measurements])).transpose() # Observer positions
     print("Calculated ROG Array!")
+    print(f"{rog_array}")
     obs_array:np.ndarray = (np.array([measurement.rho_hat for measurement in measurements])).transpose() # Unit vectors.
     print("Calculated boresight array!")
+    print(f"{obs_array}")
 
     # Calculate time offsets.
     t1:float = (measurements[1].epoch - measurements[0].epoch).total_seconds()
     t3:float = (measurements[2].epoch - measurements[1].epoch).total_seconds()
     print("Calculated time offsets!")
+    print(f"t1 = {t1} seconds")
+    print(f"t3 = {t3} seconds")
 
     # Call IOD function.
     print("BEGINNING THE MAGIC!!!!")
