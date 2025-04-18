@@ -58,7 +58,7 @@ def runVTSOLVE(init_message_path:str) -> None:
     rog_array:np.ndarray = (np.array([measurement.observer_vector for measurement in measurements])).transpose() # Observer positions
     print("Calculated ROG Array!")
     print(f"{rog_array}")
-    obs_array:np.ndarray = (np.array([measurement.rho_hat for measurement in measurements])).transpose() # Unit vectors.
+    obs_array:np.ndarray = (np.array([measurement.rho_hat.vector for measurement in measurements])).transpose() # Unit vectors.
     print("Calculated boresight array!")
     print(f"{obs_array}")
 

@@ -51,7 +51,8 @@ def iod(L:np.ndarray,
     ROG2 = ROG[:,2]  
 
     # C = dot(L2,ROG2) essentially
-    C = (np.transpose(L2)*ROG2)[0,0]
+    # C = (np.transpose(L2)*ROG2)[0,0] # Michael original stuff
+    C = np.dot(L2, ROG2)
 
     # Computing r2 polynomial coefficients
     p6 = -(d1**2 + 2*C*d1 + (np.linalg.norm(ROG2))**2)
