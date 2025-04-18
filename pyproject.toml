@@ -17,6 +17,7 @@ requires-python = ">=3.9"
 
 [project.scripts]
 img_analyze = "vtsolve.get_asteroid_pos:main"
+vtsolve = "vtsolve:main"
 
 [tool.setuptools]
 include-package-data = true
