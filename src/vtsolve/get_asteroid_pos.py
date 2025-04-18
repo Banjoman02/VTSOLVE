@@ -16,6 +16,7 @@ from ressolve.image import Image, loadCommon
 from argparse import ArgumentParser
 import cv2
 import numpy as np
+import sys
 
 # Local Imports
 
@@ -150,3 +151,4 @@ def main() -> None:
 
 if __name__=='__main__':
     main()
+    sys.exit(0)

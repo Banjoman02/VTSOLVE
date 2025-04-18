@@ -34,7 +34,7 @@ R_EARTH:float = 6378.137e3
 OMEGA_EARTH:float = 7.2921159e-5
 """``float``: Earth sidereal rotation angular velocity in rad/sec."""
 
-EQUINOX_DT:datetime = datetime.fromisoformat('2024-03-20T03:06:20Z')
+EQUINOX_DT:datetime = datetime(2024, 3, 20, 3, 6, 20)
 """``datetime``: Datetime object of the last vernal equinox."""
 
 # ================ EARTH ORBITAL PARAMS ================
@@ -57,5 +57,5 @@ EARTH_RAAN: float = radians(-11.26064)
 EARTH_ARGP: float = radians(102.94719)
 """``float``: Earth argument of periapsis."""
 
-EARTH_TO: datetime = datetime.fromisoformat("2025-01-04T13:28:00Z")
+EARTH_TO: datetime = datetime(2025, 1, 4, 13, 29, 0)
 """``float``: T0 for the Earth's orbit."""
