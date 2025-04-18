@@ -81,7 +81,8 @@ def loadData(path:str) -> list[Measurement]:
         list[Measurement]: List of all measurement objects.
     """
     with open(path, 'r') as fstream:
-        data:list[dict] = loads(fstream)
+        text:str = fstream.read()
+        data:list[dict] = loads(text)
     lat = float(data['lat'])
     lon = float(data['lon'])
     measurement_json:list[dict] = [measurement for measurement in data['measurements']]

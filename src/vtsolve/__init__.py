@@ -5,8 +5,8 @@ Created: A while ago
 Description: Package Imports and Entry point."""
 
 # Python Standard Imports
-from datetime import datetime, timedelta
 from math import degrees
+import sys
 
 # Third Party Imports
 import numpy as np
@@ -39,7 +39,7 @@ def getParser() -> ArgumentParser:
     return parser
 
 
-def main(init_message_path:str) -> None:
+def runVTSOLVE(init_message_path:str) -> None:
     """Entry point.
 
     Args:
@@ -85,3 +85,11 @@ def main(init_message_path:str) -> None:
     print(f"Calculated Classical Orbital Elements!")
     print(f"SMA = {coe[0]} meters           ECC = {coe[1]}                INC = {degrees(coe[2])} deg")
     print(f"RAAN = {degrees(coe[3])} deg    ARGP = {degrees(coe[4])} deg  TANOM = {degrees(coe[5])} deg")
+
+def main() -> None:
+    parser = getParser()
+    args = parser.parse_args()
+    data_file:str = args.data_file
+
+    runVTSOLVE(data_file)
+    sys.exit(0)
