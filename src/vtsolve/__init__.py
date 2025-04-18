@@ -30,9 +30,8 @@ def getParser() -> ArgumentParser:
                             )
     
     parser.add_argument(
-        'data',
+        'data_file',
         type=str,
-        dest='data_file',
         metavar='DATA',
         help='JSON file containing measurement data',
     )
