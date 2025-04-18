@@ -10,6 +10,7 @@ from math import degrees
 
 # Third Party Imports
 import numpy as np
+from argparse import ArgumentParser
 
 # Local Imports
 from . import conversions, constants, pipeline, dynamics # NOTE: DO NOT DELETE OR YOU WILL BREAK THINGS
@@ -17,6 +18,27 @@ from .pipeline.data_importer import Measurement, loadData
 from .constants import MU_SUN
 from .pipeline.iod import iod
 from .dynamics.propagation import intertial_cartesian_to_coe
+
+def getParser() -> ArgumentParser:
+    """Constructs the main CLI Parser.
+
+    Returns:
+        ArgumentParser: Argument parser.
+    """
+    parser = ArgumentParser(prog='Virginia Tech Space Object Location and Velocity Estimator',
+                            usage='TODO: Add usage here.',
+                            )
+    
+    parser.add_argument(
+        'data',
+        type=str,
+        dest='data_file',
+        metavar='DATA',
+        help='JSON file containing measurement data',
+    )
+
+    return parser
+
 
 def main(init_message_path:str) -> None:
     """Entry point.
