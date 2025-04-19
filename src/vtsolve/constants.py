@@ -42,7 +42,7 @@ EQUINOX_DT:datetime = datetime(2024, 3, 20, 3, 6, 20).replace(tzinfo=timezone.ut
 MU_SUN: float = G * M_SUN
 """``float``: Gravity param for the sun."""
 
-EARTH_SMA: float = 149.598e6
+EARTH_SMA: float = 149.598e9
 """``float``: Earth orbital sma around sun."""
 
 EARTH_ECC:float = 0.01671022

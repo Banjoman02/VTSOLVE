@@ -171,6 +171,7 @@ class OrbitalBodyPosition:
     def calcInertialCoords(self,
                             nu:float,
                             r:float,
+                            debug:bool = True,
                             ) -> np.ndarray:
         """Calculates coordinates in inertial frame.
 
@@ -199,4 +200,6 @@ class OrbitalBodyPosition:
             [sin(-self.raan), 0, cos(-self.raan)],
             ])
         x_i = np.matmul(R_2, x_b)
+        if debug:
+            print(f"DEBUG x_i = {x_i}")
         return x_i # This is position in the inertial frame.

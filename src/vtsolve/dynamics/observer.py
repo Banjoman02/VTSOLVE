@@ -51,6 +51,7 @@ class Observer:
     
     def toSolarInertial(self,
                         t:datetime,
+                        debug:bool = False, 
                         ) -> np.ndarray:
         """Computes the coordinates in the solar inertial frame.
 
@@ -65,5 +66,8 @@ class Observer:
                               [0, cos(ECLIPTIC_INCLINATION), -1 * sin(ECLIPTIC_INCLINATION)],
                               [0, sin(ECLIPTIC_INCLINATION), cos(ECLIPTIC_INCLINATION)],],
                               )
-        return np.matmul(rot_matrix, eci)    
+        sci = np.matmul(rot_matrix, eci)
+        if debug:
+            print(f"Observer POS Debug: eci = {eci}, sci = {sci} ALL RELATIVE TO EARTH")
+        return sci
         
