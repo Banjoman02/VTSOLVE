@@ -79,6 +79,7 @@ def iod(L:np.ndarray,
     rho1 = 1/c1*X[0,0]
     rho2 = 1/c2*X[1,0]
     rho3 = 1/c3*X[2,0]
+    print(f"rho1 = {rho1}, rho2 = {rho2}, rho3 = {rho3}")
 
     # Solving for all three position vectors
     r1 = rho1*L[:,0] + ROG[:,0]
