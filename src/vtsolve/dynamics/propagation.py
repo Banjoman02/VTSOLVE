@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 
 # Local Imports
 from ..constants import *
+from ..conversions.coordinates import R1, R2, R3
 from .kepler import solveKepler
 
 def intertial_cartesian_to_coe(
@@ -182,24 +183,10 @@ class OrbitalBodyPosition:
         Returns:
             np.ndarray: 3D Position vector containing coordinates in the inertial frame.
         """
-        perifocal:np.ndarray = np.array([r * cos(nu), r * sin(nu), 0])
-        R_3:np.ndarray = np.array([[cos(self.argp), sin(- self.argp), 0],
-                                   [sin(self.argp), cos(self.argp), 0],
-                                   [0, 0, 1],
-                                   ])
-        x_a:np.ndarray = np.matmul(R_3, perifocal)
-        R_1:np.ndarray = np.array([
-            [1, 0, 0],
-            [0, cos(-self.inc), sin(-self.inc)],
-            [0, -sin(-self.inc), cos(-self.inc)],
-            ])
-        x_b:np.ndarray = np.matmul(R_1, x_a)
-        R_2:np.ndarray = np.array([
-            [cos(-self.raan), 0, -sin(-self.raan)],
-            [0, 1, 0],
-            [sin(-self.raan), 0, cos(-self.raan)],
-            ])
-        x_i = np.matmul(R_2, x_b)
+        x_p:np.ndarray = np.array([r * cos(nu), r * sin(nu), 0]) # Perifocal coordinates
+        x_a = np.matmul(R3(-self.argp), x_p) # Intermediate frame 1
+        x_b = np.matmul(R1(-self.inc), x_a) # Intermediate frame 2
+        x_i = np.matmul(R3(-self.raan), x_b) # Intertial Frame
         if debug:
             print(f"DEBUG x_i = {x_i}")
         return x_i # This is position in the inertial frame.
