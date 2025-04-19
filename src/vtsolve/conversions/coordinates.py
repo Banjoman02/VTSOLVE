@@ -6,10 +6,12 @@ Description: Contains some coordinate conversion functions lol.
 """
 
 # Python Standard Imports
-from math import sin, cos, pi
+from math import sin, cos, pi, degrees
 
 # Third Party Libraries
 import numpy as np
+from astropy.coordinates import SkyCoord, HeliocentricTrueEcliptic, ICRS
+from astropy import units as u
 
 # Local Imports
 from ..constants import ECLIPTIC_INCLINATION
@@ -142,3 +144,7 @@ class CelestialCoordinates:
         rot_matrix = R1(ECLIPTIC_INCLINATION)
         converted = np.matmul(rot_matrix, self.vector)
         return EclipticEarthCenteredCoordinates.fromVector(converted)
+        # coord_icrs = SkyCoord(ra=degrees(self._ra)*u.deg, dec=degrees(self._dec)*u.deg, distance=1*u.AU, frame=ICRS)
+        # coord_ecl = coord_icrs.transform_to(HeliocentricTrueEcliptic(equinox='J2000'))
+        # vec = coord_ecl.cartesian.xyz.value
+        # return EclipticEarthCenteredCoordinates.fromVector(vec / np.linalg.norm(vec))
