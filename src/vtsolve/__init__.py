@@ -58,9 +58,13 @@ def runVTSOLVE(init_message_path:str) -> None:
     observer_location_array:np.ndarray = (np.array([measurement.observer_vector for measurement in measurements])) # Observer positions
     print("Calculated Observer Location Array!")
     print(f"{observer_location_array}")
+    for obs in observer_location_array:
+        print(f"Orbit radius of earth: {np.linalg.norm(obs)/constants.EARTH_SMA} AU")
     los_array:np.ndarray = (np.array([measurement.rho_hat.vector for measurement in measurements])) # Unit vectors.
     print("Calculated line-of-sight array!")
     print(f"{los_array}")
+    for los in los_array:
+        print(f"Line of sight magnitude: {np.linalg.norm(los)}")
 
     # Calculate time offsets.
     t1:float = (measurements[1].epoch - measurements[0].epoch).total_seconds()

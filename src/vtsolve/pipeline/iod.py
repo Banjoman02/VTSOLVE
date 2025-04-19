@@ -63,11 +63,10 @@ def iod(L:np.ndarray,
     P = [1,0,p6,0,0,p3,0,0,p0]
     r2 = np.roots(P)
     r2 = r2[np.isreal(r2)]
-    r2 = np.real(r2[r2>0])
-    r2 = r2[0]
+    r2 = np.real(min(r2))
 
     # Computing the u parameter
-    u = mu/(r2**3)
+    u = -mu/(r2**3)
 
     # Computing the vector of c coefficients
     Cvec = np.matrix([a1+a1u*u, -1, a3+a3u*u])
