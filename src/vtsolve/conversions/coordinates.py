@@ -14,6 +14,51 @@ import numpy as np
 # Local Imports
 from ..constants import ECLIPTIC_INCLINATION
 
+def R1(theta: float) -> np.ndarray:
+    """Passive rotation matrix about the x-axis by angle theta (in radians).
+
+    Args:
+        theta (float): Rotation angle in radians.
+
+    Returns:
+        np.ndarray: 3x3 transformation matrix.
+    """
+    return np.array([
+        [1,  0,          0],
+        [0,  cos(theta),  sin(theta)],
+        [0, -sin(theta),  cos(theta)]
+    ])
+
+def R2(theta: float) -> np.ndarray:
+    """Passive rotation matrix about the y-axis by angle theta (in radians).
+
+    Args:
+        theta (float): Rotation angle in radians.
+
+    Returns:
+        np.ndarray: 3x3 Transformation Matrix.
+    """
+    return np.array([
+        [ cos(theta), 0, -sin(theta)],
+        [ 0,          1,  0         ],
+        [ sin(theta), 0,  cos(theta)]
+    ])
+
+def R3(theta: float) -> np.ndarray:
+    """Passive rotation matrix about the z-axis by angle theta (in radians).
+
+    Args:
+        theta (float): Rotation angle in radians.
+
+    Returns:
+        np.ndarray: 3x3 Transformation Matrix.
+    """
+    return np.array([
+        [ cos(theta),  sin(theta), 0],
+        [-sin(theta),  cos(theta), 0],
+        [ 0,           0,          1]
+    ])
+
 class EclipticEarthCenteredCoordinates:
     """Represents cartesian coordinates in the ecliptic frame, but relative to the Earth's COM."""
 
@@ -94,9 +139,6 @@ class CelestialCoordinates:
         Returns:
             EclipticEarthCenteredCoordinates: Coordinates, represented as Earth Centered Ecliptic.
         """
-        rot_matrix = np.array([[1, 0, 0],
-                              [0, cos(ECLIPTIC_INCLINATION), -1 * sin(ECLIPTIC_INCLINATION)],
-                              [0, sin(ECLIPTIC_INCLINATION), cos(ECLIPTIC_INCLINATION)],],
-                              )
+        rot_matrix = R1(ECLIPTIC_INCLINATION)
         converted = np.matmul(rot_matrix, self.vector)
         return EclipticEarthCenteredCoordinates.fromVector(converted)
