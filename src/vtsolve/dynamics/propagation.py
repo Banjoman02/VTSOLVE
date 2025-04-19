@@ -75,26 +75,6 @@ def intertial_cartesian_to_coe(
         true_anom = 2 * pi - true_anom # Quadrant check
     return (a, e, i, raan, argp, true_anom)
 
-def main() -> None:
-    """User interface for the calculations. Should not be used in the rest of the codebase."""
-    r:list[float] = eval(input("Enter the position as a list with units in DU: "))
-    v:list[float] = eval(input("Enter the velocity vector as a list with units of DU/TU: "))
-    mu:float = eval(input("Enter your gravity parameter in units if DU^3 / TU^2: "))
-    coe = intertial_cartesian_to_coe(
-        r[0],
-        r[1],
-        r[2],
-        v[0],
-        v[1],
-        v[2],
-        mu=mu,
-    )
-    print(f"a = {coe[0]}, e = {coe[1]}, i = {coe[2]}")
-    print(f"raan = {coe[3]}, argp = {coe[4]}, true_anom = {coe[5]}")
-
-if __name__=='__main__':
-    main()
-
 class OrbitalBodyPosition:
     
     def __init__(self,
