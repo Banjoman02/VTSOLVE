@@ -16,7 +16,7 @@ from argparse import ArgumentParser
 from . import conversions, constants, pipeline, dynamics # NOTE: DO NOT DELETE OR YOU WILL BREAK THINGS
 from .pipeline.data_importer import Measurement, loadData
 from .constants import MU_SUN
-from .pipeline.iod import iod
+from .pipeline.iod import iod, iod2
 from .dynamics.propagation import intertial_cartesian_to_coe
 
 def getParser() -> ArgumentParser:
@@ -55,12 +55,12 @@ def runVTSOLVE(init_message_path:str) -> None:
 
     # Put together Observer position matrix. NOTE: These are transposed per how Michael wrote the code.
     print("="*80)
-    rog_array:np.ndarray = (np.array([measurement.observer_vector for measurement in measurements])).transpose() # Observer positions
-    print("Calculated ROG Array!")
-    print(f"{rog_array}")
-    obs_array:np.ndarray = (np.array([measurement.rho_hat.vector for measurement in measurements])).transpose() # Unit vectors.
-    print("Calculated boresight array!")
-    print(f"{obs_array}")
+    observer_location_array:np.ndarray = (np.array([measurement.observer_vector for measurement in measurements])) # Observer positions
+    print("Calculated Observer Location Array!")
+    print(f"{observer_location_array}")
+    los_array:np.ndarray = (np.array([measurement.rho_hat.vector for measurement in measurements])) # Unit vectors.
+    print("Calculated line-of-sight array!")
+    print(f"{los_array}")
 
     # Calculate time offsets.
     t1:float = (measurements[1].epoch - measurements[0].epoch).total_seconds()
@@ -71,12 +71,8 @@ def runVTSOLVE(init_message_path:str) -> None:
 
     # Call IOD function.
     print("BEGINNING THE MAGIC!!!!")
-    pos,vel = iod(obs_array,
-                  rog_array,
-                  t1,
-                  t3,
-                  mu=MU_SUN,
-                  )
+    pos,vel = iod(los_array.transpose(), observer_location_array.transpose(),
+                t1, t3)
     print(f"Position and Velocity Calculated!\npos = {pos}\nvel={vel}")
 
     # State Vector to COE Conversions
