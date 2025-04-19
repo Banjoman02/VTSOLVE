@@ -103,7 +103,7 @@ class OrbitalBodyPosition:
                  inc: float,
                  argp: float,
                  raan: float,
-                 t0: datetime,
+                 M0:float,
                  mu:float = MU_SUN,
                  ):
         """Calculates the position of an orbital body.
@@ -114,8 +114,7 @@ class OrbitalBodyPosition:
             inc (float): Inclination.
             argp (float): Argument of Periapsis.
             raan (float): Right ascension of ascending node.
-            t0 (float): Intial epoch.
-            mean_lon (float): Mean Longitude.
+            M0 (float): Mean anomaly at epoch J2000.
             mu (float, Optional): Gravitational Parameter. Defaults to MU_SUN.
         """
         self.sma:float = sma
@@ -123,7 +122,7 @@ class OrbitalBodyPosition:
         self.inc:float = inc
         self.argp:float = argp
         self.raan:float = raan
-        self.t0:datetime = t0.replace(tzinfo=timezone.utc) # This makes things not break.
+        self.m0:float = M0
         
         self.mu:float = mu
 
@@ -140,7 +139,7 @@ class OrbitalBodyPosition:
             EARTH_INC,
             EARTH_ARGP,
             EARTH_RAAN,
-            J2000,
+            EARTH_M0,
             mu=MU_SUN,
         )
         
@@ -153,8 +152,8 @@ class OrbitalBodyPosition:
         Returns:
             float: True anomaly at datetime.
         """
-        delta_t:float = (t - self.t0).total_seconds() # Total time difference between inital time and input time
-        mean_anom = sqrt(self.mu / (self.sma ** 3)) * delta_t  # Mean anomaly
+        delta_t:float = (t - J2000).total_seconds() # Total time difference between inital time and input time
+        mean_anom = (self.m0 + sqrt(self.mu / (self.sma ** 3)) * delta_t) % (2 * pi)  # Mean anomaly
         ecc_anom = solveKepler(mean_anom, self.ecc) # Eccentric anomaly
         return 2 * atan2(sqrt((1 + self.ecc) / (1 - self.ecc)) * tan(ecc_anom / 2), 1) # Calculates and returns nu
     

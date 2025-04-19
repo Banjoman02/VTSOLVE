@@ -57,5 +57,5 @@ EARTH_RAAN: float = radians(-11.26064)
 EARTH_ARGP: float = radians(102.94719)
 """``float``: Earth argument of periapsis."""
 
-EARTH_TO: datetime = datetime(2025, 1, 4, 13, 29, 0).replace(tzinfo=timezone.utc)
-"""``float``: T0 for the Earth's orbit."""
+EARTH_M0: float = radians(357.51716)
+"""``float``: Earth mean anomaly at epoch."""
